@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Workout Tracker</title>
+</head>
+<body>
+
+<div id="workoutTracker">
+    <h1>Workout Tracker</h1>
+    
+    <div id="exerciseList">
+        <!-- Existing exercises will be dynamically added here -->
+    </div>
+
+    <div id="addRemoveButtons">
+        <button id="addBtn" onclick="toggleModal('addExerciseModal')">Add Exercise</button>
+        <button id="removeBtn" onclick="toggleModal('removeExerciseModal')">Remove Exercise</button>
+    </div>
+
+    <div id="addExerciseModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="toggleModal('addExerciseModal')">&times;</span>
+            <h2>Add Exercise</h2>
+            <input type="text" id="exerciseName" placeholder="Exercise Name">
+            <input type="number" id="initialSets" placeholder="Sets">
+            <input type="number" id="initialReps" placeholder="Reps">
+            <button id="confirmAddBtn" onclick="addExercise()">Add</button>
+        </div>
+    </div>
+
+    <div id="removeExerciseModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="toggleModal('removeExerciseModal')">&times;</span>
+            <h2>Remove Exercise</h2>
+            <select id="exerciseSelect">
+                <!-- Existing exercises will be dynamically added here -->
+            </select>
+            <button id="confirmRemoveBtn" onclick="removeExercise()">Remove</button>
+        </div>
+    </div>
+
+    <!-- Add this modal to your existing HTML structure -->
+    <div id="editExerciseModal" class="modal">
+    	<div class="modal-content">
+            <span class="close" onclick="toggleModal('editExerciseModal')">&times;</span>
+            <h2>Edit Exercise</h2>
+            <input type="text" id="editedExerciseName" placeholder="Exercise Name">
+            <input type="text" id="editedSetsReps" placeholder="Sets/Reps">
+            <button id="confirmEditBtn" onclick="confirmEdit()">Save Changes</button>
+        </div>
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
