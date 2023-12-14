@@ -8,6 +8,9 @@ body {
     justify-content: center;
     height: 100vh;
     background-color: #f4f4f4;
+    background-size: cover; /* Ensures the image covers the entire background */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
+    background-attachment: fixed; /* Keeps the background fixed while scrolling */
 }
 
 #workoutTracker {
@@ -15,6 +18,7 @@ body {
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    opacity: 0.85; /* Adjust the opacity value for transparency (0.0 to 1.0) */
 }
 
 h1 {
@@ -32,6 +36,7 @@ h1 {
     padding: 10px;
     border-bottom: 1px solid #ccc;
     cursor: pointer;
+    margin: 10px;
 }
 
 .addDeleteButtons {
@@ -60,6 +65,7 @@ h1 {
     border: none;
     padding: 10px;
     cursor: pointer;
+    border-radius: 10px;
 }
 
 #removeBtn {
@@ -69,6 +75,7 @@ h1 {
     padding: 10px;
     cursor: pointer;
     float: right;
+    border-radius: 10px;
 }
 
 #cancelAddBtn {
@@ -94,8 +101,6 @@ h1 {
     padding: 10px;
     cursor: pointer;
 }
-
-/* Add this to your existing styles.css */
 
 .modal {
     display: none;
@@ -142,4 +147,22 @@ h1 {
     border: none;
     padding: 10px;
     cursor: pointer;
+}
+
+.roundButton {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.decrement {
+    background-color: #ff4444;
+}
+
+.increment {
+    background-color: #4caf50;
 }

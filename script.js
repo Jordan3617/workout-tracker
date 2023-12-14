@@ -1,7 +1,63 @@
-// Add this to your existing script.js
-
 //let exercises = []; // Array to store exercises
 let exercises = JSON.parse(localStorage.getItem('exercises')) || []; // Load exercises from localStorage
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Array of possible background image URLs
+    const backgroundUrls = [
+    "url('https://i0.wp.com/www.strengthlog.com/wp-content/uploads/2021/02/Full-body-workout-training-program.jpg?resize=2048%2C1367&ssl=1')",
+    "url('https://247wallst.com/wp-content/uploads/2018/06/crossfit.jpg')",
+    "url('https://i0.wp.com/post.healthline.com/wp-content/uploads/2023/02/female-dumbbells-1296x728-header-1296x729.jpg?w=1155&h=2268')",
+    "url('https://www.planetfitness.com/sites/default/files/feature-image/break-workout_602724.jpg')",
+    "url('https://the-home-gym.com/wp-content/uploads/2022/05/bigstock-205660306-1024x683.jpg')",
+    // Add more URLs as needed
+];
+
+    // Function to pick a random background URL
+    function getRandomBackgroundUrl() {
+        const randomIndex = Math.floor(Math.random() * backgroundUrls.length);
+        return backgroundUrls[randomIndex];
+    }
+
+    // Set the background image
+    document.body.style.backgroundImage = getRandomBackgroundUrl();
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        events: [], // You'll populate this array with exercise events
+        dateClick: function (info) {
+            // Handle date click, display exercise list for the clicked day
+            const clickedDate = info.dateStr;
+            displayExercisesForDate(clickedDate);
+        }
+    });
+
+    // Call this function to update events when exercises are added/removed
+    function updateCalendarEvents() {
+        const calendarEvents = exercises.map(exercise => ({
+            title: exercise.name,
+            start: exercise.date, // Assuming you have a date property in exercises
+            color: '#4caf50' // Green color for days with exercises
+        }));
+        $('#calendar').fullCalendar('removeEvents');
+        $('#calendar').fullCalendar('addEventSource', calendarEvents);
+    }
+
+    // Function to display exercise list for a specific date
+    function displayExercisesForDate(date) {
+        const exercisesForDate = exercises.filter(exercise => exercise.date === date);
+        // Display exercisesForDate as needed
+        console.log(`Exercises for ${date}:`, exercisesForDate);
+    }
+
+    // Initialize the calendar when the page loads
+    initializeCalendar();
+});
 
 function toggleModal(modalId) {
     const modal = document.getElementById(modalId);
@@ -57,6 +113,9 @@ function addExercise() {
 
     // Reinitialize the exercise list after adding an exercise
     initializeExerciseList();
+
+    // Update the calendar events
+    updateCalendarEvents();
 }
 
 // Function to populate the exercise select dropdown
@@ -105,6 +164,9 @@ function removeExercise() {
 	// Reinitialize the exercise list after adding an exercise
     	initializeExerciseList();
 
+        // Update the calendar events
+        updateCalendarEvents();
+
         // Close the remove modal
         toggleModal('removeExerciseModal');
     }
@@ -121,7 +183,17 @@ function initializeExerciseList() {
         exerciseTab.className = 'exerciseTab';
         exerciseTab.innerHTML = `
             <span>${exercise.name}</span>
-            <span><strong>Sets:</strong> ${exercise.sets} | <strong>Reps:</strong> ${exercise.reps}</span>
+            <span>
+                <strong>Sets:</strong> 
+                <button class="roundButton decrement" onclick="updateExerciseProperty('${exercise.name}','sets','decrement')">-</button>
+                ${exercise.sets}
+                <button class="roundButton increment" onclick="updateExerciseProperty('${exercise.name}','sets','increment')">+</button>
+                |
+                <strong>Reps:</strong> 
+                <button class="roundButton decrement" onclick="updateExerciseProperty('${exercise.name}','reps','decrement')">-</button>
+                ${exercise.reps}
+                <button class="roundButton increment" onclick="updateExerciseProperty('${exercise.name}','reps','increment')">+</button>
+            </span>
         `;
         exerciseList.appendChild(exerciseTab);
     });
@@ -130,7 +202,29 @@ function initializeExerciseList() {
     initializeRemoveButton();
 }
 
-// ... (rest of the existing code)
+// Function to update exercise property for a specific exercise
+function updateExerciseProperty(exerciseName, property, operation) {
+    const exercise = findExerciseByName(exerciseName);
+    if (exercise) {
+        if (operation === 'increment') {
+            exercise[property]++;
+        } else if (operation === 'decrement' && exercise[property] > 0) {
+            exercise[property]--;
+        }
+        updateLocalStorageAndUI();
+    }
+}
+
+// Function to find an exercise by name
+function findExerciseByName(exerciseName) {
+    return exercises.find(exercise => exercise.name === exerciseName);
+}
+
+// Function to update local storage and reinitialize the exercise list
+function updateLocalStorageAndUI() {
+    localStorage.setItem('exercises', JSON.stringify(exercises));
+    initializeExerciseList();
+}
 
 // Function to initialize the remove button state
 function initializeRemoveButton() {
@@ -143,3 +237,12 @@ initializeExerciseList();
 
 // Initialize the remove button state when the page loads
 initializeRemoveButton();
+
+// Initialize the calendar when the page loads
+initializeCalendar();
+
+function initializeCalendar() {
+    // Initialize FullCalendar
+    $('#calendar').fullCalendar('today');
+    // You can add additional initialization here if needed
+}
